@@ -71,8 +71,10 @@
     (let ((request-ok-p (if dserve--request-ok-p-fn
 			    (funcall dserve--request-ok-p-fn httpcon))))
       (if request-ok-p
-	  (dserve--handler-proc httpcon) 
-	(dbooks-test-handler httpcon "no access")))))
+	  (dserve--handler-proc httpcon)
+	(progn
+	  (elnode-http-start httpcon 403 '("Content-type" . "text/html"))
+	  (elnode-http-return httpcon "<div>No access</div>"))))))
 
 (defun dserve--handler-proc (httpcon)
   "Actual webserver implementation. Do webserving to HTTPCON."
